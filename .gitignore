@@ -1,0 +1,8 @@
+# env
+.env
+tft_project/.env
+
+# venv
+.venv/
+__pycache__/
+*.pyc
