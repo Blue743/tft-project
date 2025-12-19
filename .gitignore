@@ -1,8 +1,11 @@
-# env
+# Secrets
 .env
 tft_project/.env
 
-# venv
+# Google credentials
+tft_project/jsons/*.json
+
+# Python
 .venv/
 __pycache__/
 *.pyc
