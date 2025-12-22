@@ -2,9 +2,6 @@
 .env
 tft_project/.env
 
-# Google credentials
-tft_project/jsons/*.json
-
 # Python
 .venv/
 __pycache__/
