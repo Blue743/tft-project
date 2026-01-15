@@ -9,13 +9,10 @@ player_puuid = os.getenv("PUUID_URL")
 match_url = os.getenv("MATCH_URL")
 rank = os.getenv("TFT_RANK")
 
-
-
-
 def get_safe(url, timeout=20):
     try:
         response = requests.get(url, timeout=timeout)
-        response.raise_for_status()
+        response.raise_for_status() 
         return response.json()
     
     except Timeout:
@@ -30,9 +27,6 @@ def get_safe(url, timeout=20):
         "url": url
         }
     
-def data_validation(x, y):
-    if x not in y:
-        return
     
 def fetch_matches(gameName:str , tagLine:str):
 
@@ -101,29 +95,133 @@ def fetch_matches(gameName:str , tagLine:str):
             all_matches.append(match_data)
 
 
-    return all_matches, puuid, gameName, response_rank
+    return  {
+    "player": {
+        "gameName": gameName,
+        "puuid": puuid,
+        "rank": response_rank
+    },
+    "matches": all_matches
+}
 
     
-
 
 
 def get_details(matches, my_puuid):
     details = []
+    champion_ids = []
 
     for match in matches:
         for player in match['info']['participants']:
+
+            
             if player['puuid'] == my_puuid:
-                
-                placements = player['placement']
-                companion = player['companion']
 
                 details.append({
                     'placement': player['placement'],
                     'companion': player['companion'],
-                    })
+                    'gold_left': player['gold_left'],
+                    'last_round': player['last_round']
+                })
+
+                
+                units = player['units']
+                for unit in units:
+                    champion_ids.append(unit['character_id'])
+
                 break
 
-    return details
-
+    return details, champion_ids
     
 
+def build_player_view(gameName, tagLine):
+
+    result = fetch_matches(gameName, tagLine)
+
+    if isinstance(result, dict) and "error" in result:
+        return  result
+
+
+    
+    player = result["player"]
+    matches = result["matches"]
+    puuid = player["puuid"]
+    gameName = player["gameName"]
+    rank = player["rank"]
+
+    details = get_details(matches, puuid)
+
+    return {
+        "player": {
+            "game_name": gameName,
+            "rank": rank
+        },
+        "matches": details
+    }
+
+cache_cdragon = None #variavel vazia para armazenar o json
+
+cdragon_url = "https://raw.communitydragon.org/latest/cdragon/tft/pt_br.json"
+
+def tft_assets():
+    global cache_cdragon     # declara ela como global, pra ser reconhecida dentro da função
+    if cache_cdragon:     # esse if verifica se ela ainda é NONE. se for NONE = Lança a request. Se já existir info aqui,ignora e apenas retorna a info que já existe;
+        return cache_cdragon     # auto explicativo.
+
+    else:
+        try:
+            response = requests.get(cdragon_url) 
+            response.raise_for_status()     #Esse modulo levanta erros HTTP para retornos ruins, ex: 4xx 5xx ...
+            cache_cdragon = response.json()     # armazena o Json do community dragon na variavel vazia.
+        except requests.exceptions.RequestException as e:     # esse modulo captura TODOS os erros que podem acontecer com o REQUESTS. importante se lembrar de usar.
+            return {
+                "error" : e
+            }
+    print(cache_cdragon.keys())
+    return cache_cdragon # retorna a info.
+
+
+assets = tft_assets() 
+
+
+def set_search():
+    set_data = assets['setData']
+    print(assets['setData'][0].keys())
+    for i in set_data:
+        if i["name"] == "Set16":
+            set16 = i
+            for champ in set16["champions"]:
+                if champ["name"] == "Lux":
+                    print(champ['name'], champ['cost'], champ['role'], champ['traits'])
+set_search()
+
+
+#acessa o banco de dados do CD usando a funçao.
+#itera sobre cada set data, pra poder fazer a comparação.
+#compara se o iterável['nome'] tem o mesmo nome do Set que voce quer.
+# resultado : o iterável recebe o set16
+# agora itera sobre a chave set['champions']
+# faz outra comparação, se i é igual ao nome que foi passado:sucesso
+# printa o nome custo e traits. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
