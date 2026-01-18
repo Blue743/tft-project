@@ -32,7 +32,12 @@ SECRET_KEY = 'django-insecure-758s0$lu$7t&rxb3@or=otmc-97oj^t$^yo_-+h!f6ypehfex+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+
+    "teamfight-tactics-project.onrender.com",
+    "localhost",
+    "127.0.0.1",
+]
 
 
 # Application definition
