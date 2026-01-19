@@ -55,13 +55,21 @@ def champion_view(request):
         })
     print(champion_data["icon"])
 
-
     icon_path = champion_data.get("icon", "")
 
+    image_url = ""
+
     if icon_path:
-        image_url = "https://raw.communitydragon.org/latest" + icon_path
-    else:
-        image_url = ""
+        clean_path = icon_path.lower()
+        clean_path = clean_path.replace("assets/", "")
+        clean_path = clean_path.replace(".tex", ".png")
+
+        image_url = (
+        "https://raw.communitydragon.org/latest/"
+        "plugins/rcp-be-lol-game-data/global/default/"
+        + clean_path
+    )
+
 
 
     return render(request, "champion.html", {
