@@ -6,4 +6,5 @@ urlpatterns = [
     path("health/", health_check),
     path("matches/", views.get_game),
     path("champion/", views.champion_view),
+    
 ]
