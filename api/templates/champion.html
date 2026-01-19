@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Champion Viewer</title>
+</head>
+<body>
+    <h1>{{ name }}</h1>
+
+    <p><strong>Cost:</strong> {{ cost }}</p>
+
+    <p><strong>Traits:</strong></p>
+    <ul>
+        {% for trait in traits %}
+            <li>{{ trait }}</li>
+        {% endfor %}
+    </ul>
+
+    <img src="{{ image }}" width="200" />
+
+</body>
+</html>

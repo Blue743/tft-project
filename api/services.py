@@ -193,8 +193,6 @@ def set_search():
             for champ in set16["champions"]:
                 if champ["name"] == "Lux":
                     print(champ['name'], champ['cost'], champ['role'], champ['traits'])
-set_search()
-
 
 #acessa o banco de dados do CD usando a funçao.
 #itera sobre cada set data, pra poder fazer a comparação.
